@@ -1,0 +1,61 @@
+$ python run_clean_experiment.py
+
+[Setup] Device: cuda
+100%|███████████████████████████████████████████████████████████████████| 170M/170M [00:22<00:00, 7.75MB/s]
+[Data] Train size: 50000 | Test size: 10000
+
+==============================
+Training model: my_resnet18
+==============================
+my_resnet18 | Epoch 01/20 | LR 0.10000 | Loss 2.0683 | TestAcc 37.40%
+my_resnet18 | Epoch 02/20 | LR 0.10000 | Loss 1.5934 | TestAcc 44.84%
+my_resnet18 | Epoch 03/20 | LR 0.10000 | Loss 1.3603 | TestAcc 53.48%
+my_resnet18 | Epoch 04/20 | LR 0.10000 | Loss 1.1530 | TestAcc 61.87%
+my_resnet18 | Epoch 05/20 | LR 0.10000 | Loss 0.9574 | TestAcc 65.60%
+my_resnet18 | Epoch 06/20 | LR 0.10000 | Loss 0.7973 | TestAcc 71.62%
+my_resnet18 | Epoch 07/20 | LR 0.10000 | Loss 0.6824 | TestAcc 76.25%
+my_resnet18 | Epoch 08/20 | LR 0.10000 | Loss 0.6152 | TestAcc 80.55%
+my_resnet18 | Epoch 09/20 | LR 0.10000 | Loss 0.5769 | TestAcc 78.36%
+my_resnet18 | Epoch 10/20 | LR 0.10000 | Loss 0.5424 | TestAcc 80.25%
+my_resnet18 | Epoch 11/20 | LR 0.01000 | Loss 0.3686 | TestAcc 87.04%
+my_resnet18 | Epoch 12/20 | LR 0.01000 | Loss 0.3103 | TestAcc 87.98%
+my_resnet18 | Epoch 13/20 | LR 0.01000 | Loss 0.2850 | TestAcc 88.60%
+my_resnet18 | Epoch 14/20 | LR 0.01000 | Loss 0.2651 | TestAcc 88.82%
+my_resnet18 | Epoch 15/20 | LR 0.01000 | Loss 0.2503 | TestAcc 89.20%
+my_resnet18 | Epoch 16/20 | LR 0.01000 | Loss 0.2342 | TestAcc 89.16%
+my_resnet18 | Epoch 17/20 | LR 0.01000 | Loss 0.2194 | TestAcc 88.85%
+my_resnet18 | Epoch 18/20 | LR 0.01000 | Loss 0.2075 | TestAcc 89.39%
+my_resnet18 | Epoch 19/20 | LR 0.01000 | Loss 0.1961 | TestAcc 89.01%
+my_resnet18 | Epoch 20/20 | LR 0.01000 | Loss 0.1866 | TestAcc 89.49%
+[my_resnet18] BEST TestAcc: 89.49% | time: 45.8 min
+[Saved checkpoint] /mnt/c/Users/Mattia/OneDrive/Desktop/Mattia/UNIVERSITA/SECONDO ANNO/PRIMO SEMESTRE/Machine Learning Security/Progetto Finale/code/checkpoints_compare/my_resnet18_best.pth
+
+==============================
+Training model: tv_resnet18
+==============================
+tv_resnet18 | Epoch 01/20 | LR 0.10000 | Loss 2.1030 | TestAcc 40.56%
+tv_resnet18 | Epoch 02/20 | LR 0.10000 | Loss 1.4908 | TestAcc 51.54%
+tv_resnet18 | Epoch 03/20 | LR 0.10000 | Loss 1.2102 | TestAcc 59.62%
+tv_resnet18 | Epoch 04/20 | LR 0.10000 | Loss 0.9926 | TestAcc 66.05%
+tv_resnet18 | Epoch 05/20 | LR 0.10000 | Loss 0.8174 | TestAcc 69.17%
+tv_resnet18 | Epoch 06/20 | LR 0.10000 | Loss 0.6847 | TestAcc 73.03%
+tv_resnet18 | Epoch 07/20 | LR 0.10000 | Loss 0.6064 | TestAcc 72.96%
+tv_resnet18 | Epoch 08/20 | LR 0.10000 | Loss 0.5627 | TestAcc 81.23%
+tv_resnet18 | Epoch 09/20 | LR 0.10000 | Loss 0.5203 | TestAcc 78.49%
+tv_resnet18 | Epoch 10/20 | LR 0.10000 | Loss 0.5036 | TestAcc 74.37%
+tv_resnet18 | Epoch 11/20 | LR 0.01000 | Loss 0.3264 | TestAcc 88.66%
+tv_resnet18 | Epoch 12/20 | LR 0.01000 | Loss 0.2694 | TestAcc 89.24%
+tv_resnet18 | Epoch 13/20 | LR 0.01000 | Loss 0.2449 | TestAcc 89.43%
+tv_resnet18 | Epoch 14/20 | LR 0.01000 | Loss 0.2293 | TestAcc 90.13%
+tv_resnet18 | Epoch 15/20 | LR 0.01000 | Loss 0.2120 | TestAcc 89.87%
+tv_resnet18 | Epoch 16/20 | LR 0.01000 | Loss 0.1990 | TestAcc 89.81%
+tv_resnet18 | Epoch 17/20 | LR 0.01000 | Loss 0.1839 | TestAcc 89.40%
+tv_resnet18 | Epoch 18/20 | LR 0.01000 | Loss 0.1749 | TestAcc 90.37%
+tv_resnet18 | Epoch 19/20 | LR 0.01000 | Loss 0.1617 | TestAcc 89.99%
+tv_resnet18 | Epoch 20/20 | LR 0.01000 | Loss 0.1551 | TestAcc 89.88%
+[tv_resnet18] BEST TestAcc: 90.37% | time: 46.4 min
+[Saved checkpoint] /mnt/c/Users/Mattia/OneDrive/Desktop/Mattia/UNIVERSITA/SECONDO ANNO/PRIMO SEMESTRE/Machine Learning Security/Progetto Finale/code/checkpoints_compare/tv_resnet18_best.pth
+
+========= FINAL COMPARISON (CLEAN) =========
+My ResNet18   TestAcc: 89.49%
+TV ResNet18   TestAcc: 90.37%

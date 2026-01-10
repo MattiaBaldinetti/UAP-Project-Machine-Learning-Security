@@ -1,0 +1,15 @@
+$ python eval_uap.py
+
+[Setup] Device: cuda
+[Load] my_resnet18_best.pth --> best_test_acc: 0.8949
+[Freeze] my_resnet18 trainable params: 0
+[Load] tv_resnet18_best.pth --> best_test_acc: 0.9037
+[Freeze] tv_resnet18 trainable params: 0
+[UAP] Loaded: uap_my_resnet18_eps0p031373.pth | eps: 0.03137254901960784
+[UAP] Loaded: uap_tv_resnet18_eps0p031373.pth | eps: 0.03137254901960784
+
+========= PUNTO 9: CLEAN vs ADV (UAP) =========
+my_model + uap_my    | clean:  89.49% | adv:  19.65% | fooling:  79.83%
+tv_model + uap_tv    | clean:  90.37% | adv:  21.11% | fooling:  78.49%
+tv_model + uap_my    | clean:  90.37% | adv:  26.86% | fooling:  72.65%
+my_model + uap_tv    | clean:  89.49% | adv:  34.54% | fooling:  64.60%

@@ -1,0 +1,27 @@
+1. Come lanciare il codice per:
+- training
+- evaluation su test
+- selezione best checkpoint
+- confronto tra due modelli
+
+Posizionarsi nella cartella principale del progetto: python run_clean_experiment.py
+
+2. Ricaricare i modelli salvati + Congelamento per usarli in UAP:
+Posizionarsi nella cartella principale del progetto: python load_models.py
+
+3. Calcolo della UAP + Salvataggio in /uaps/:
+Posizionarsi nella cartella principale del progetto: python run_save_uap.py
+
+4. Caricamento della UAP salvata + Visualizzazione:
+Posizionarsi nella cartella principale del progetto: 
+A. caricare e visualizzare un file specifico:
+    python uap_load_view.py --file uaps/<nome_file>.pth
+
+B. caricare e visualizzare tutti i file nella cartella uaps/:
+    python uap_load_view.py
+
+5. Valutazione della UAP sui modelli salvati:
+Posizionarsi nella cartella principale del progetto: python eval_uap.py
+
+A. Modificando il valore di EPS_PIX in config.py è possibile cambiare il budget della UAP.
+

@@ -1,0 +1,8 @@
+$ python load_models.py
+
+Device: cuda
+[Load] my_resnet18_best.pth --> best_test_acc: 0.8949
+[Freeze] my_resnet18 trainable params: 0
+[Load] tv_resnet18_best.pth --> best_test_acc: 0.9037
+[Freeze] tv_resnet18 trainable params: 0
+[OK] Modelli caricati e congelati.
