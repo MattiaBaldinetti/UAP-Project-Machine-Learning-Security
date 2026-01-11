@@ -23,25 +23,49 @@ pip install torch torchvision torchaudio numpy matplotlib
 ---
 
 ## Struttura del progetto
+
+```text
 project_root/
 │
-├── code/
-│   ├── run_clean_experiment.py
-│   ├── load_models.py
-│   ├── run_save_uap.py
-│   ├── uap_load_view.py
-│   ├── eval_uap.py
-│   ├── config.py
-│   ├── data.py
-│   ├── uap.py
-│   └── models/
+├── run_clean_experiment.py      # Training clean dei modelli + selezione best checkpoint
+├── load_models.py               # Caricamento e congelamento dei modelli salvati
+├── run_save_uap.py              # Calcolo e salvataggio delle UAP (pixel-space)
+├── uap_load_view.py             # Caricamento e visualizzazione delle UAP salvate
+├── eval_uap.py                  # Valutazione clean vs adversarial + fooling rate
+├── config.py                    # Configurazioni globali (iperparametri, path, eps)
+├── data.py                      # DataLoader CIFAR-10 (clean e pixel-space)
+├── uap.py                       # Funzioni per la generazione delle UAP
 │
-├── checkpoints_compare/   # checkpoint best dei modelli
-├── uaps/                  # UAP salvate (.pth)
-├── uap_img/               # immagini di visualizzazione UAP
-└── README.md
+├── models/
+│    ├── my_resnet18.py           # Implementazione ResNet-18 custom
+│    ├── tv_resnet18.py           # ResNet-18 torchvision adattata a CIFAR-10
+│    └── densenet.py              # DenseNet light per CIFAR-10
+│
+├── checkpoints_compare/             # Best checkpoint dei modelli (clean training)
+│   ├── my_resnet18_best.pth
+│   ├── tv_resnet18_best.pth
+│   └── densenet_light_best.pth
+│
+├── uaps/                            # Universal Adversarial Perturbations salvate (.pth)
+│   ├── uap_my_resnet18_eps*.pth
+│   ├── uap_tv_resnet18_eps*.pth
+│   └── uap_densenet_light_eps*.pth
+│
+├── uap_img/                         # Immagini di visualizzazione delle UAP
+│   ├── uap_lambda_*.png
+│   └── image_perturbation_*.png
+│
+├── data/                         # CIFAR-10
+│   └── cifar-10-batches-py
+│
+├── output/                         # Esempi di output derivati dalle run del codice
+│   └── example_output_*.txt
+│
+└── README.md                        # Documentazione del progetto
+```
 
 ---
+
 ## 1. Training dei modelli (clean)
 I modelli vengono addestrati su CIFAR-10 in condizioni clean.
 Per ogni modello viene salvato il best checkpoint in base all’accuracy sul test set.
