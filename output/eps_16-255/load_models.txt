@@ -5,4 +5,6 @@ Device: cuda
 [Freeze] my_resnet18 trainable params: 0
 [Load] tv_resnet18_best.pth --> best_test_acc: 0.9037
 [Freeze] tv_resnet18 trainable params: 0
+[Load] densenet_light_best.pth --> best_test_acc: 0.8682
+[Freeze] densenet_light trainable params: 0
 [OK] Modelli caricati e congelati.

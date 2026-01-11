@@ -1,5 +1,5 @@
-# code/run_uap.py
-import os
+from __future__ import annotations
+import argparse
 from pathlib import Path
 import torch
 
@@ -15,6 +15,15 @@ from config import (
     BETA,
     Y_TARGET,
 )
+
+# --- Modelli supportati ---
+# Chiave = quello che scrivi da CLI
+# Valore = quello che passa a load_and_freeze_model(...)
+MODEL_ALIASES = {
+    "my_resnet18": "my",          # oppure "my_resnet18"
+    "tv_resnet18": "tv",          # oppure "tv_resnet18"
+    "densenet_light": "densenet", # oppure "densenet_light"
+}
 
 
 def _eps_to_str(eps_pix: float) -> str:
@@ -60,80 +69,78 @@ def save_uap_pth(
 
 
 def main():
-    # 1) carica e congela modelli best
-    my_model, _, device = load_and_freeze_model("my")
-    tv_model, _, _ = load_and_freeze_model("tv")
+    parser = argparse.ArgumentParser(
+        description=(
+            "Generate and save pixel-space UAP(s).\n"
+            "Uso:\n"
+            "  python run_save_uap.py                # tutti i modelli\n"
+            "  python run_save_uap.py densenet_light # solo un modello\n"
+        )
+    )
 
-    # 2) loader pixel-space (x in [0,1], NO Normalize)
+    # UN SOLO ARGOMENTO POSIZIONALE (opzionale)
+    parser.add_argument(
+        "model",
+        nargs="?",                 # opzionale
+        default="all",
+        choices=list(MODEL_ALIASES.keys()) + ["all"],
+        help="Model name (default: all).",
+    )
+    args = parser.parse_args()
+
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    print("[Setup] Device:", device)
+
+    # quali modelli processare
+    if args.model == "all":
+        selected_models = list(MODEL_ALIASES.keys())
+    else:
+        selected_models = [args.model]
+
+    # loader pixel-space (x in [0,1], NO Normalize)
     train_loader_pix, _ = get_cifar10_loaders_pixelspace(device=device)
 
-    # 3) iperparametri UAP
-    # Importati da config.py
-
-    # 4) cartella output UAP (root/uaps)
+    # output dir UAP
     uap_dir = Path(PROJECT_DIR) / "uaps"
+    uap_dir.mkdir(parents=True, exist_ok=True)
 
-    # --- UAP contro my_model ---
-    print("\n[UAP Pixel-space] Generating UAP for my_model...")
-    delta_my_pix, losses_my = gen_uap_pixelspace(
-        model=my_model,
-        loader_pix=train_loader_pix,
-        nb_epoch=UAP_EPOCHS,
-        eps_pix=EPS_PIX,
-        beta=BETA,
-        step_decay=STEP_DECAY,
-        y_target=Y_TARGET,
-        delta_init=None,
-        device=device,
-    )
+    for model_name in selected_models:
+        print("\n==============================")
+        print(f"[UAP Pixel-space] Generating UAP for {model_name}...")
+        print("==============================")
 
-    path_my = save_uap_pth(
-        delta_pix=delta_my_pix,
-        model_name="my_resnet18",
-        eps_pix=EPS_PIX,
-        beta=BETA,
-        step_decay=STEP_DECAY,
-        uap_epochs=UAP_EPOCHS,
-        y_target=Y_TARGET,
-        out_dir=uap_dir,
-        losses=losses_my,
-    )
-    print("[UAP SAVED] my_resnet18")
-    print(" Path:", path_my)
-    print("\n[UAP DONE] delta shape:", tuple(delta_my_pix.shape))
-    print(" Delta min/max:", float(delta_my_pix.min()), float(delta_my_pix.max()))
-    print("-" * 60)
+        # carica e congela solo quel modello
+        model, _, _ = load_and_freeze_model(model_name, device=device)
 
-    # --- UAP contro tv_model ---
-    print("\n[UAP Pixel-space] Generating UAP for tv_model...")
-    delta_tv_pix, losses_tv = gen_uap_pixelspace(
-        model=tv_model,
-        loader_pix=train_loader_pix,
-        nb_epoch=UAP_EPOCHS,
-        eps_pix=EPS_PIX,
-        beta=BETA,
-        step_decay=STEP_DECAY,
-        y_target=Y_TARGET,
-        delta_init=None,
-        device=device,
-    )
+        delta_pix, losses = gen_uap_pixelspace(
+            model=model,
+            loader_pix=train_loader_pix,
+            nb_epoch=UAP_EPOCHS,
+            eps_pix=EPS_PIX,
+            beta=BETA,
+            step_decay=STEP_DECAY,
+            y_target=Y_TARGET,
+            delta_init=None,
+            device=device,
+        )
 
-    path_tv = save_uap_pth(
-        delta_pix=delta_tv_pix,
-        model_name="tv_resnet18",
-        eps_pix=EPS_PIX,
-        beta=BETA,
-        step_decay=STEP_DECAY,
-        uap_epochs=UAP_EPOCHS,
-        y_target=Y_TARGET,
-        out_dir=uap_dir,
-        losses=losses_tv,
-    )
-    print("[UAP SAVED] tv_resnet18")
-    print(" Path:", path_tv)
-    print("\n[UAP DONE] delta shape:", tuple(delta_tv_pix.shape))
-    print(" Delta min/max:", float(delta_tv_pix.min()), float(delta_tv_pix.max()))
-    print("-" * 60)
+        path = save_uap_pth(
+            delta_pix=delta_pix,
+            model_name=model_name,   # nome “standard” usato nel filename
+            eps_pix=EPS_PIX,
+            beta=BETA,
+            step_decay=STEP_DECAY,
+            uap_epochs=UAP_EPOCHS,
+            y_target=Y_TARGET,
+            out_dir=uap_dir,
+            losses=losses,
+        )
+
+        print(f"[UAP SAVED] {model_name}")
+        print(" Path:", path)
+        print(f"[UAP DONE] Delta shape:", tuple(delta_pix.shape))
+        print(" Delta min/max:", float(delta_pix.min()), float(delta_pix.max()))
+        print("-" * 60)
 
 
 if __name__ == "__main__":

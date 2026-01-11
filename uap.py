@@ -1,4 +1,3 @@
-# code/uap.py
 from typing import Optional, Tuple, List
 
 import torch

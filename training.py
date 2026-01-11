@@ -1,4 +1,3 @@
-# code/training.py
 import copy
 import time
 from pathlib import Path

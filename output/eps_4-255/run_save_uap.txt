@@ -4,6 +4,8 @@ $ python run_save_uap.py
 [Freeze] my_resnet18 trainable params: 0
 [Load] tv_resnet18_best.pth --> best_test_acc: 0.9037
 [Freeze] tv_resnet18 trainable params: 0
+[Load] densenet_light_best.pth --> best_test_acc: 0.8682
+[Freeze] densenet_light trainable params: 0
 
 [UAP Pixel-space] Generating UAP for my_model...
 [UAP-Pix] Epoch 1/10 | step 0.015686 | eps 0.015686
@@ -26,6 +28,7 @@ $ python run_save_uap.py
   epoch mean loss: 1.1089 | delta min/max: -0.0157/0.0157
 [UAP-Pix] Epoch 10/10 | step 0.002105 | eps 0.015686
   epoch mean loss: 1.1251 | delta min/max: -0.0157/0.0157
+
 [UAP SAVED] my_resnet18
  Path: /mnt/c/Users/Mattia/OneDrive/Desktop/Mattia/UNIVERSITA/SECONDO ANNO/PRIMO SEMESTRE/Machine Learning Security/Progetto Finale/code/uaps/uap_my_resnet18_eps0p015686.pth
 
@@ -54,9 +57,37 @@ $ python run_save_uap.py
   epoch mean loss: 2.2616 | delta min/max: -0.0157/0.0157
 [UAP-Pix] Epoch 10/10 | step 0.002105 | eps 0.015686
   epoch mean loss: 2.2639 | delta min/max: -0.0157/0.0157
+
 [UAP SAVED] tv_resnet18
  Path: /mnt/c/Users/Mattia/OneDrive/Desktop/Mattia/UNIVERSITA/SECONDO ANNO/PRIMO SEMESTRE/Machine Learning Security/Progetto Finale/code/uaps/uap_tv_resnet18_eps0p015686.pth
 
 [UAP DONE] delta shape: (1, 3, 32, 32)
  Delta min/max: -0.01568627543747425 0.01568627543747425
 ------------------------------------------------------------
+
+[UAP-Pix] Epoch 1/10 | step 0.015686 | eps 0.015686
+  epoch mean loss: 3.3228 | delta min/max: -0.0157/0.0157
+[UAP-Pix] Epoch 2/10 | step 0.012549 | eps 0.015686
+  epoch mean loss: 3.5456 | delta min/max: -0.0157/0.0157
+[UAP-Pix] Epoch 3/10 | step 0.010039 | eps 0.015686
+  epoch mean loss: 3.5814 | delta min/max: -0.0157/0.0157
+[UAP-Pix] Epoch 4/10 | step 0.008031 | eps 0.015686
+  epoch mean loss: 3.5763 | delta min/max: -0.0157/0.0157
+[UAP-Pix] Epoch 5/10 | step 0.006425 | eps 0.015686
+  epoch mean loss: 3.5807 | delta min/max: -0.0157/0.0157
+[UAP-Pix] Epoch 6/10 | step 0.005140 | eps 0.015686
+  epoch mean loss: 3.5820 | delta min/max: -0.0157/0.0157
+[UAP-Pix] Epoch 7/10 | step 0.004112 | eps 0.015686
+  epoch mean loss: 3.5972 | delta min/max: -0.0157/0.0157
+[UAP-Pix] Epoch 8/10 | step 0.003290 | eps 0.015686
+  epoch mean loss: 3.5957 | delta min/max: -0.0157/0.0157
+[UAP-Pix] Epoch 9/10 | step 0.002632 | eps 0.015686
+  epoch mean loss: 3.5967 | delta min/max: -0.0157/0.0157
+[UAP-Pix] Epoch 10/10 | step 0.002105 | eps 0.015686
+  epoch mean loss: 3.5954 | delta min/max: -0.0157/0.0157
+
+[UAP SAVED] densenet_light
+ Path: /mnt/c/Users/Mattia/OneDrive/Desktop/Mattia/UNIVERSITA/SECONDO ANNO/PRIMO SEMESTRE/Machine Learning Security/Progetto Finale/code/uaps/uap_densenet_light_eps0p015686.pth
+ 
+[UAP DONE] Delta shape: (1, 3, 32, 32)
+ Delta min/max: -0.01568627543747425 0.01568627543747425

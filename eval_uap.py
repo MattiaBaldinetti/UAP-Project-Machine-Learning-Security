@@ -1,14 +1,15 @@
-# code/eval_uap.py
 from __future__ import annotations
 
+import sys
 from pathlib import Path
+from collections import defaultdict
+
 import torch
 import torch.nn as nn
 
 from config import PROJECT_DIR, CIFAR10_MEAN, CIFAR10_STD
 from load_models import load_and_freeze_model
 from data import get_cifar10_loaders_pixelspace
-from config import EPS_PIX
 
 
 # -------------------------
@@ -18,7 +19,7 @@ class Normalizer(nn.Module):
     def __init__(self, mean, std):
         super().__init__()
         mean_t = torch.tensor(mean, dtype=torch.float32).view(1, 3, 1, 1)
-        std_t  = torch.tensor(std,  dtype=torch.float32).view(1, 3, 1, 1)
+        std_t = torch.tensor(std, dtype=torch.float32).view(1, 3, 1, 1)
         self.register_buffer("mean", mean_t)
         self.register_buffer("std", std_t)
 
@@ -36,16 +37,10 @@ def wrap_with_normalizer(model: nn.Module, device: torch.device) -> nn.Module:
 # (B) Applica δ in pixel-space + clamp
 # -------------------------
 def apply_uap_to_batch(x_pix: torch.Tensor, delta_pix: torch.Tensor, eps_pix: float) -> torch.Tensor:
-    """
-    x_pix: [B,3,32,32] in [0,1]
-    delta_pix: [1,3,32,32] oppure [3,32,32]
-    """
     if delta_pix.dim() == 3:
-        delta_pix = delta_pix.unsqueeze(0)  # -> [1,3,32,32]
-
-    delta_pix = delta_pix.clamp(-eps_pix, eps_pix)     # safety
-    x_adv = (x_pix + delta_pix).clamp(0.0, 1.0)        # clip immagine valida
-    return x_adv
+        delta_pix = delta_pix.unsqueeze(0)  # [1,3,32,32]
+    delta_pix = delta_pix.clamp(-eps_pix, eps_pix)      # safety
+    return (x_pix + delta_pix).clamp(0.0, 1.0)          # clip immagine valida
 
 
 # -------------------------
@@ -57,7 +52,7 @@ def evaluate_clean_and_uap(
     loader_pix,
     delta_pix: torch.Tensor,
     eps_pix: float,
-    device: torch.device
+    device: torch.device,
 ):
     model_wrapped.eval()
 
@@ -72,10 +67,8 @@ def evaluate_clean_and_uap(
         x_pix = x_pix.to(device, non_blocking=True)
         y = y.to(device, non_blocking=True)
 
-        # CLEAN
         pred_clean = model_wrapped(x_pix).argmax(dim=1)
 
-        # ADV
         x_adv = apply_uap_to_batch(x_pix, delta_pix, eps_pix)
         pred_adv = model_wrapped(x_adv).argmax(dim=1)
 
@@ -90,66 +83,139 @@ def evaluate_clean_and_uap(
     return acc_clean, acc_adv, fooling_rate
 
 
-def eps_to_str(eps_pix: float) -> str:
-    return f"{eps_pix:.6f}".replace(".", "p")
+# -------------------------
+# (D) Helpers path / parsing
+# -------------------------
+def _uaps_dir() -> Path:
+    return Path(PROJECT_DIR) / "uaps"
 
 
+def _resolve_uap_path(uap_arg: str) -> Path:
+    p = Path(uap_arg)
+    if p.exists() and p.is_file():
+        return p
+    candidate = _uaps_dir() / uap_arg
+    if candidate.exists() and candidate.is_file():
+        return candidate
+    raise FileNotFoundError(f"UAP non trovata: '{uap_arg}' (né path né dentro {_uaps_dir()})")
+
+
+def _normalize_model_name(name: str) -> str:
+    name = name.strip().lower()
+    aliases = {
+        "tv_resnet": "tv_resnet18",
+        "tv": "tv_resnet18",
+        "my_resnet": "my_resnet18",
+        "my": "my_resnet18",
+        "dense": "densenet_light",
+        "densenet": "densenet_light",
+    }
+    return aliases.get(name, name)
+
+
+def _fmt_pct(x: float) -> str:
+    return f"{x*100:6.2f}%"
+
+
+def _fmt_eps(eps: float) -> str:
+    # 16/255 => "0.062745" (coerente col nome file)
+    return f"{eps:.6f}"
+
+
+def _load_uap(path: Path):
+    ckpt = torch.load(str(path), map_location="cpu")
+    if "delta_pix" not in ckpt:
+        raise KeyError(f"{path.name} non contiene la chiave 'delta_pix'")
+    delta = ckpt["delta_pix"]
+    eps = float(ckpt.get("eps_pix"))  # recupera il valore di eps dal checkpoint
+    return delta, eps, ckpt
+
+def _uap_base_name(path: Path) -> str:
+    # rimuove estensione e suffisso _epsXpYYYYYY
+    name = path.stem                     # uap_densenet_light_eps0p031373
+    if "_eps" in name:
+        name = name.split("_eps")[0]     # uap_densenet_light
+    return name
+
+
+
+# -------------------------
+# (E) MAIN
+# -------------------------
 def main():
-    # device
+    args = sys.argv[1:]
+
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print("[Setup] Device:", device)
 
-    # carica e congela modelli
-    my_model, _, _ = load_and_freeze_model("my")
-    tv_model, _, _ = load_and_freeze_model("tv")
-
-    # test loader pixel-space (NO Normalize)
+    # loader test pixel-space (NO Normalize)
     _, test_loader_pix = get_cifar10_loaders_pixelspace(device=device)
 
-    # -------------------------
-    # (D) Carica delta dai .pth in uaps/ (semplice come il notebook)
-    # -------------------------
-    eps_str = eps_to_str(EPS_PIX)
+    # Caso 2 argomenti: MODEL + UAP
+    if len(args) == 2:
+        model_name = _normalize_model_name(args[0])
+        uap_path = _resolve_uap_path(args[1])
 
-    uap_dir = Path(PROJECT_DIR) / "uaps"
-    path_my = uap_dir / f"uap_my_resnet18_eps{eps_str}.pth"
-    path_tv = uap_dir / f"uap_tv_resnet18_eps{eps_str}.pth"
+        model, _, _ = load_and_freeze_model(model_name, device=device)
+        model_wrapped = wrap_with_normalizer(model, device)
 
-    ckpt_my = torch.load(str(path_my), map_location="cpu")
-    ckpt_tv = torch.load(str(path_tv), map_location="cpu")
+        delta, eps_uap, _ = _load_uap(uap_path)
+        acc_c, acc_a, fr = evaluate_clean_and_uap(model_wrapped, test_loader_pix, delta, eps_uap, device)
 
-    delta_my_pix = ckpt_my["delta_pix"]  # CPU
-    delta_tv_pix = ckpt_tv["delta_pix"]  # CPU
+        print("\n========= Clean vs ADV (model × uap) =========")
+        print(f"Valore di eps = {_fmt_eps(eps_uap)}")
+        line = f"{model_name} + {_uap_base_name(uap_path):10s} | clean: {_fmt_pct(acc_c)} | adv: {_fmt_pct(acc_a)} | fooling: {_fmt_pct(fr)}"
+        print(line)
+        return
 
-    eps_my = float(ckpt_my.get("eps_pix", EPS_PIX))
-    eps_tv = float(ckpt_tv.get("eps_pix", EPS_PIX))
+    # Caso 0 argomenti: TUTTI GLI INCROCI
+    if len(args) != 0:
+        raise SystemExit("Uso: python eval_uap.py [MODEL UAP_FILE]\n- senza argomenti: tutti gli incroci\n- con 2 argomenti: solo quel caso")
 
-    print("[UAP] Loaded:", path_my.name, "| eps:", eps_my)
-    print("[UAP] Loaded:", path_tv.name, "| eps:", eps_tv)
+    # 1) trova tutte le UAP
+    uap_dir = _uaps_dir()
+    if not uap_dir.exists():
+        raise FileNotFoundError(f"Cartella UAP non trovata: {uap_dir}")
+    uap_paths = sorted(uap_dir.glob("*.pth"))
+    if not uap_paths:
+        raise FileNotFoundError(f"Nessun file .pth in: {uap_dir}")
 
-    # -------------------------
-    # (E) Wrappa e valuta 4 combinazioni (uguale al tuo)
-    # -------------------------
-    model_my_wrapped = wrap_with_normalizer(my_model, device)
-    model_tv_wrapped = wrap_with_normalizer(tv_model, device)
+    # 2) raggruppa UAP per eps
+    uaps_by_eps: dict[float, list[Path]] = defaultdict(list)
+    for p in uap_paths:
+        _, eps_uap, _ = _load_uap(p)
+        uaps_by_eps[eps_uap].append(p)
 
-    results = {}
-    results["my_model + uap_my"] = evaluate_clean_and_uap(
-        model_my_wrapped, test_loader_pix, delta_my_pix, eps_my, device
-    )
-    results["tv_model + uap_tv"] = evaluate_clean_and_uap(
-        model_tv_wrapped, test_loader_pix, delta_tv_pix, eps_tv, device
-    )
-    results["tv_model + uap_my"] = evaluate_clean_and_uap(
-        model_tv_wrapped, test_loader_pix, delta_my_pix, eps_my, device
-    )
-    results["my_model + uap_tv"] = evaluate_clean_and_uap(
-        model_my_wrapped, test_loader_pix, delta_tv_pix, eps_tv, device
-    )
+    # 3) modelli disponibili (quelli del tuo progetto)
+    model_names = ["my_resnet18", "tv_resnet18", "densenet_light"]
 
-    print("\n========= PUNTO 9: CLEAN vs ADV (UAP) =========")
-    for k, (acc_c, acc_a, fr) in results.items():
-        print(f"{k:20s} | clean: {acc_c*100:6.2f}% | adv: {acc_a*100:6.2f}% | fooling: {fr*100:6.2f}%")
+    # 4) carica modelli una volta sola (più veloce)
+    wrapped_models: dict[str, nn.Module] = {}
+    for m in model_names:
+        model, _, _ = load_and_freeze_model(m, device=device)
+        wrapped_models[m] = wrap_with_normalizer(model, device)
+
+    print("\n========= TUTTI GLI INCROCI Clean vs ADV (model × uap) =========")
+
+    # 5) per ogni eps: stampa header + tutte le combinazioni
+    for eps_uap in sorted(uaps_by_eps.keys()):
+        print(f"\nValore di eps = {_fmt_eps(eps_uap)}")
+
+        # pre-load delta per questo eps (eviti reload inutili)
+        deltas = []
+        for p in uaps_by_eps[eps_uap]:
+            delta, _, _ = _load_uap(p)
+            deltas.append((p, delta))
+
+        # stampa tutte le righe: model × uap
+        for model_name in model_names:
+            model_wrapped = wrapped_models[model_name]
+            for p, delta in deltas:
+                acc_c, acc_a, fr = evaluate_clean_and_uap(
+                    model_wrapped, test_loader_pix, delta, eps_uap, device
+                )
+                line = f"{model_name} + {_uap_base_name(p):10s} | clean: {_fmt_pct(acc_c)} | adv: {_fmt_pct(acc_a)} | fooling: {_fmt_pct(fr)}"
+                print(line)
 
 
 if __name__ == "__main__":

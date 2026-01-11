@@ -1,4 +1,3 @@
-# code/show_uap.py
 from __future__ import annotations
 
 import argparse
@@ -55,15 +54,18 @@ def show_uap(delta_pix: torch.Tensor, eps_pix: float, model_name: str):
 
     d = delta_pix.detach().squeeze(0).cpu()  # [3,32,32]
 
+    # δ mapped [-eps,+eps] -> [0,1]
     d_vis = (d / eps_pix).clamp(-1, 1)
     d_vis = (d_vis + 1) / 2
     d_vis_img = d_vis.permute(1, 2, 0).numpy()
 
+    # δ amplified (solo display)
     amp = 10.0
     d_amp = (d * amp / eps_pix).clamp(-1, 1)
     d_amp = (d_amp + 1) / 2
     d_amp_img = d_amp.permute(1, 2, 0).numpy()
 
+    # heatmap L2 per pixel
     heat = torch.sqrt((d ** 2).sum(dim=0)).numpy()
 
     plt.figure(figsize=(12, 4))
@@ -108,7 +110,7 @@ def show_example_perturbation(
     _, test_loader_pix = get_cifar10_loaders_pixelspace(device=device)
     xb_pix, _ = next(iter(test_loader_pix))
 
-    x = xb_pix[0:1].to(device)
+    x = xb_pix[0:1].to(device, non_blocking=True)  # [1,3,32,32]
     x_pert = torch.clamp(x + delta_pix.to(device), 0.0, 1.0)
 
     x_img = x.detach().cpu().squeeze(0).permute(1, 2, 0).numpy()
@@ -156,7 +158,7 @@ def visualize_one(path: Path, device: torch.device):
     elif trained_against == "my_resnet18":
         model_name = "my_resnet18"
     else:
-        model_name = trained_against
+        model_name = str(trained_against)
 
     # figura 1: UAP (λ / δ)
     show_uap(delta, eps_pix, model_name)
@@ -166,20 +168,34 @@ def visualize_one(path: Path, device: torch.device):
 
 
 def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--file", type=str, default=None)
-    parser.add_argument("--cpu", action="store_true")
+    parser = argparse.ArgumentParser(
+        description="Visualizza (e salva) le immagini della UAP. "
+                    "Se non passi nulla, visualizza tutte le .pth in uaps/. "
+                    "Se passi un nome file/path, visualizza solo quello."
+    )
+    
+    parser.add_argument(
+        "file",
+        nargs="?",
+        default=None,
+        help="Nome file .pth (in uaps/) oppure path completo. Se omesso: tutti.",
+    )
     args = parser.parse_args()
 
-    device = torch.device(
-        "cpu" if args.cpu else ("cuda" if torch.cuda.is_available() else "cpu")
-    )
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    print("[Setup] Device:", device)
 
-    if args.file:
-        visualize_one(_resolve_uap_path(args.file), device)
+    if args.file is not None:
+        path = _resolve_uap_path(args.file)
+        visualize_one(path, device)
         return
 
-    for p in sorted(_uaps_dir().glob("*.pth")):
+    uap_dir = _uaps_dir()
+    paths = sorted(uap_dir.glob("*.pth"))
+    if not paths:
+        raise FileNotFoundError(f"Nessun file .pth trovato in: {uap_dir}")
+
+    for p in paths:
         visualize_one(p, device)
 
 

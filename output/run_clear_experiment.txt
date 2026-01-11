@@ -56,6 +56,34 @@ tv_resnet18 | Epoch 20/20 | LR 0.01000 | Loss 0.1551 | TestAcc 89.88%
 [tv_resnet18] BEST TestAcc: 90.37% | time: 46.4 min
 [Saved checkpoint] /mnt/c/Users/Mattia/OneDrive/Desktop/Mattia/UNIVERSITA/SECONDO ANNO/PRIMO SEMESTRE/Machine Learning Security/Progetto Finale/code/checkpoints_compare/tv_resnet18_best.pth
 
+==============================
+Training model: densenet_light
+==============================
+densenet_light | Epoch 01/20 | LR 0.10000 | Loss 1.5635 | TestAcc 51.89%
+densenet_light | Epoch 02/20 | LR 0.10000 | Loss 1.1188 | TestAcc 63.06%
+densenet_light | Epoch 03/20 | LR 0.10000 | Loss 0.9268 | TestAcc 66.08%
+densenet_light | Epoch 04/20 | LR 0.10000 | Loss 0.8245 | TestAcc 68.09%
+densenet_light | Epoch 05/20 | LR 0.10000 | Loss 0.7674 | TestAcc 67.81%
+densenet_light | Epoch 06/20 | LR 0.10000 | Loss 0.7025 | TestAcc 72.42%
+densenet_light | Epoch 07/20 | LR 0.10000 | Loss 0.6645 | TestAcc 70.16%
+densenet_light | Epoch 08/20 | LR 0.10000 | Loss 0.6372 | TestAcc 72.63%
+densenet_light | Epoch 09/20 | LR 0.10000 | Loss 0.6240 | TestAcc 74.39%
+densenet_light | Epoch 10/20 | LR 0.10000 | Loss 0.6081 | TestAcc 65.35%
+densenet_light | Epoch 11/20 | LR 0.01000 | Loss 0.4459 | TestAcc 85.27%
+densenet_light | Epoch 12/20 | LR 0.01000 | Loss 0.4010 | TestAcc 86.08%
+densenet_light | Epoch 13/20 | LR 0.01000 | Loss 0.3868 | TestAcc 85.87%
+densenet_light | Epoch 14/20 | LR 0.01000 | Loss 0.3698 | TestAcc 86.66%
+densenet_light | Epoch 15/20 | LR 0.01000 | Loss 0.3565 | TestAcc 86.46%
+densenet_light | Epoch 16/20 | LR 0.01000 | Loss 0.3509 | TestAcc 85.77%
+densenet_light | Epoch 17/20 | LR 0.01000 | Loss 0.3458 | TestAcc 85.79%
+densenet_light | Epoch 18/20 | LR 0.01000 | Loss 0.3372 | TestAcc 86.33%
+densenet_light | Epoch 19/20 | LR 0.01000 | Loss 0.3294 | TestAcc 86.61%
+densenet_light | Epoch 20/20 | LR 0.01000 | Loss 0.3231 | TestAcc 86.82%
+[densenet_light] BEST TestAcc: 86.82% | time: 22.8 min
+[Saved checkpoint] /mnt/c/Users/Mattia/OneDrive/Desktop/Mattia/UNIVERSITA/SECONDO ANNO/PRIMO SEMESTRE/Machine Learning Security/Progetto Finale/code/checkpoints_compare/densenet_light_best.pth
+
+
 ========= FINAL COMPARISON (CLEAN) =========
-My ResNet18   TestAcc: 89.49%
-TV ResNet18   TestAcc: 90.37%
+My ResNet18     TestAcc: 89.49%
+TV ResNet18     TestAcc: 90.37%
+Densenet Light  TestAcc: 86.82%

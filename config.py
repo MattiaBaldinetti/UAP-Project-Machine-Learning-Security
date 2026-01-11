@@ -1,4 +1,3 @@
-# code/config.py
 from pathlib import Path
 
 SEED = 42
@@ -27,7 +26,7 @@ CHECKPOINT_DIR = PROJECT_DIR / "checkpoints_compare"
 # -------------------------
 
 # Pixel-space L∞ budget
-EPS_PIX = 4 / 255
+EPS_PIX = 16 / 255
 
 # UAP optimization
 UAP_EPOCHS = 10
