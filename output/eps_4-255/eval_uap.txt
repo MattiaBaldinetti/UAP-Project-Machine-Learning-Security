@@ -1,0 +1,14 @@
+ SEMESTRE/Machine Learning Security/Progetto Finale/code$ python eval_uap.py
+[Setup] Device: cuda
+[Load] my_resnet18_best.pth --> best_test_acc: 0.8949
+[Freeze] my_resnet18 trainable params: 0
+[Load] tv_resnet18_best.pth --> best_test_acc: 0.9037
+[Freeze] tv_resnet18 trainable params: 0
+[UAP] Loaded: uap_my_resnet18_eps0p015686.pth | eps: 0.01568627450980392
+[UAP] Loaded: uap_tv_resnet18_eps0p015686.pth | eps: 0.01568627450980392
+
+========= PUNTO 9: CLEAN vs ADV (UAP) =========
+my_model + uap_my    | clean:  89.49% | adv:  64.04% | fooling:  33.08%
+tv_model + uap_tv    | clean:  90.37% | adv:  43.32% | fooling:  54.40%
+tv_model + uap_my    | clean:  90.37% | adv:  71.01% | fooling:  26.09%
+my_model + uap_tv    | clean:  89.49% | adv:  66.17% | fooling:  31.53%

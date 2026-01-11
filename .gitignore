@@ -13,3 +13,6 @@ Thumbs.db
 
 # VS Code
 .vscode/
+
+# Compressed archives
+*.gz
