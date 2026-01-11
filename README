@@ -1,3 +1,25 @@
+# Universal Adversarial Perturbations on CIFAR-10  
+### Machine Learning Security – Final Project
+
+Questo progetto analizza le **Universal Adversarial Perturbations (UAP)** nel contesto della classificazione di immagini CIFAR-10, con particolare attenzione alla **robustezza dei modelli** e alla **transferability (black-box attacks)** tra architetture diverse.
+
+I modelli considerati sono:
+- `my_resnet18` (implementazione custom)
+- `tv_resnet18` (ResNet-18 torchvision adattata a CIFAR-10)
+- `densenet_light` (DenseNet compatta per CIFAR-10)
+
+---
+
+## Requisiti
+
+### Python
+- Python ≥ 3.9
+
+### Librerie esterne
+```bash
+pip install torch torchvision torchaudio numpy matplotlib
+
+
 1. Come lanciare il codice per:
 - training
 - evaluation su test
