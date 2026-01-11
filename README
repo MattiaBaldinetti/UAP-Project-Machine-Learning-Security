@@ -42,7 +42,7 @@ B. Valutare specifico Modello e UAP: python eval_uap.py <model_name> <uap>
 !! Modificando il valore di EPS_PIX in config.py è possibile cambiare il budget della UAP.
 
 !! Analisi finale dei risultati!!
-==> ε = 4/255 <==
+==> ε = 4/255 = 0.015686 <==
 - UAP ottimizzata su my_resnet18
 UAP(my, 4/255) → my_resnet18 (white-box)
 UAP(my, 4/255) → tv_resnet18 (black-box)
@@ -59,7 +59,7 @@ UAP(dense, 4/255) → my_resnet18 (black-box)
 UAP(dense, 4/255) → tv_resnet18 (black-box)
 
 
-==> ε = 8/255 <==
+==> ε = 8/255 = 0.031373 <==
 - UAP ottimizzata su my_resnet18
 UAP(my, 8/255) → my_resnet18 (white-box)
 UAP(my, 8/255) → tv_resnet18 (black-box)
@@ -76,7 +76,7 @@ UAP(dense, 8/255) → my_resnet18 (black-box)
 UAP(dense, 8/255) → tv_resnet18 (black-box)
 
 
-==> ε = 16/255 <==
+==> ε = 16/255 = 0.062745  <==
 - - UAP ottimizzata su my_resnet18
 UAP(my, 16/255) → my_resnet18 (white-box)
 UAP(my, 16/255) → tv_resnet18 (black-box)
