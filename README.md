@@ -1,76 +1,80 @@
 # Universal Adversarial Perturbations on CIFAR-10  
 ### Machine Learning Security – Final Project
 
-Questo progetto analizza le **Universal Adversarial Perturbations (UAP)** nel contesto della classificazione di immagini CIFAR-10, con particolare attenzione alla **robustezza dei modelli** e alla **transferability (black-box attacks)** tra architetture diverse.
+This project analyzes **Universal Adversarial Perturbations (UAPs)** in the context of CIFAR-10 image classification, with particular attention to **model robustness** and **transferability (black-box attacks)** across different neural network architectures.
 
-I modelli considerati sono:
-- `my_resnet18` (implementazione custom)
-- `tv_resnet18` (ResNet-18 torchvision adattata a CIFAR-10)
-- `densenet_light` (DenseNet compatta per CIFAR-10)
+The considered models are:
+- `my_resnet18` (custom implementation)
+- `tv_resnet18` (torchvision ResNet-18 adapted to CIFAR-10)
+- `densenet_light` (compact DenseNet for CIFAR-10)
 
 ---
 
-## Requisiti
+## Requirements
 
 ### Python
 - Python ≥ 3.9
 
-### Librerie esterne
+### External libraries
 ```
 pip install torch torchvision torchaudio numpy matplotlib
 ```
 
 ---
 
-## Struttura del progetto
+
+---
+
+## Project structure
 
 ```text
 project_root/
 │
-├── run_clean_experiment.py      # Training clean dei modelli + selezione best checkpoint
-├── load_models.py               # Caricamento e congelamento dei modelli salvati
-├── run_save_uap.py              # Calcolo e salvataggio delle UAP (pixel-space)
-├── uap_load_view.py             # Caricamento e visualizzazione delle UAP salvate
-├── eval_uap.py                  # Valutazione clean vs adversarial + fooling rate
-├── config.py                    # Configurazioni globali (iperparametri, path, eps)
-├── data.py                      # DataLoader CIFAR-10 (clean e pixel-space)
-├── uap.py                       # Funzioni per la generazione delle UAP
+├── run_clean_experiment.py      # Clean training + best checkpoint selection
+├── load_models.py               # Load and freeze trained models
+├── run_save_uap.py              # UAP generation and saving (pixel-space)
+├── uap_load_view.py             # Load and visualize saved UAPs
+├── eval_uap.py                  # Clean vs adversarial evaluation + fooling rate
+├── config.py                    # Global configuration (hyperparameters, paths, eps)
+├── data.py                      # CIFAR-10 DataLoader (clean and pixel-space)
+├── uap.py                       # UAP generation utilities
 │
 ├── models/
-│    ├── my_resnet18.py           # Implementazione ResNet-18 custom
-│    ├── tv_resnet18.py           # ResNet-18 torchvision adattata a CIFAR-10
-│    └── densenet.py              # DenseNet light per CIFAR-10
+│   ├── my_resnet18.py           # Custom ResNet-18 implementation
+│   ├── tv_resnet18.py           # torchvision ResNet-18 adapted to CIFAR-10
+│   └── densenet.py              # Light DenseNet for CIFAR-10
 │
-├── checkpoints_compare/             # Best checkpoint dei modelli (clean training)
+├── checkpoints_compare/         # Best clean checkpoints
 │   ├── my_resnet18_best.pth
 │   ├── tv_resnet18_best.pth
 │   └── densenet_light_best.pth
 │
-├── uaps/                            # Universal Adversarial Perturbations salvate (.pth)
+├── uaps/                        # Saved Universal Adversarial Perturbations (.pth)
 │   ├── uap_my_resnet18_eps*.pth
 │   ├── uap_tv_resnet18_eps*.pth
 │   └── uap_densenet_light_eps*.pth
 │
-├── uap_img/                         # Immagini di visualizzazione delle UAP
+├── uap_img/                     # UAP visualization images
 │   ├── uap_lambda_*.png
 │   └── image_perturbation_*.png
 │
-├── data/                         # CIFAR-10
+├── data/                        # CIFAR-10 dataset
 │   └── cifar-10-batches-py
 │
-├── output/                         # Esempi di output derivati dalle run del codice
+├── output/                      # Example outputs from code runs
 │   └── example_output_*.txt
 │
-└── README.md                        # Documentazione del progetto
+└── README.md                    # Project documentation
 ```
 
 ---
 
-## 1. Training dei modelli (clean)
-I modelli vengono addestrati su CIFAR-10 in condizioni clean.
-Per ogni modello viene salvato il best checkpoint in base all’accuracy sul test set.
+## 1. Clean model training
+Models are trained on CIFAR-10 under clean conditions.
 
-### A. Allenamento di tutti i modelli
+For each model, the best checkpoint is selected based on test accuracy.
+
+### A. Training all models
 Posizionarsi nella cartella principale del progetto: ```python run_clean_experiment.py```
 
 ### B. Allenamento di un singolo modello
@@ -228,10 +232,3 @@ Name: Mattia Baldinetti
 Course: Machine Learning Security (Cybersecurity)
 
 University: La Sapienza University of Rome
-
-
-
-
-
-
-
