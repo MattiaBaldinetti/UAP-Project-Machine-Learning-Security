@@ -13,7 +13,7 @@ from data import get_cifar10_loaders_pixelspace
 
 
 # -------------------------
-# (A) Normalizer (stile prof)
+# (A) Normalizer
 # -------------------------
 class Normalizer(nn.Module):
     def __init__(self, mean, std):
