@@ -22,9 +22,6 @@ pip install torch torchvision torchaudio numpy matplotlib
 
 ---
 
-
----
-
 ## Project structure
 
 ```text
@@ -75,70 +72,70 @@ Models are trained on CIFAR-10 under clean conditions.
 For each model, the best checkpoint is selected based on test accuracy.
 
 ### A. Training all models
-Posizionarsi nella cartella principale del progetto: ```python run_clean_experiment.py```
+From the project root directory:: ```python run_clean_experiment.py```
 
-### B. Allenamento di un singolo modello
-Posizionarsi nella cartella principale del progetto: ```python run_clean_experiment.py --model <nome_modello>```
+### B. Training a single model
+From the project root directory:: ```python run_clean_experiment.py --model <nome_modello>```
 
-## 2. Caricamento e congelamento dei modelli
-Ricarica i checkpoint migliori e congela i modelli (`modalità eval` e `requires_grad=False`) per l’uso nelle UAP.
+## 2. Loading and freezing models
+Loads the best checkpoints and freezes the models (`eval mode` and `requires_grad=False`) for UAP generation.
 
-### A. Per tutti i modelli: 
-Posizionarsi nella cartella principale del progetto: ```python load_models.py```
+### A. Load all models 
+From the project root directory:: ```python load_models.py```
 
-### B. Per un modello specifico: 
-Posizionarsi nella cartella principale del progetto: ```python load_models.py --model <nome_modello>```
+### B. Load a specific model
+From the project root directory:: ```python load_models.py --model <nome_modello>```
 
-## 3. Calcolo della Universal Adversarial Perturbation (UAP)
-La UAP viene calcolata in pixel-space e salvata nella cartella *uaps/*.
+## 3. Universal Adversarial Perturbation (UAP) generation
+UAPs are computed in pixel-space and saved in the *uaps/* directory.
 
-Il budget della perturbazione ***ε*** è definito in config.py tramite la variabile `EPS_PIX`.
+The perturbation budget ***ε*** is defined in config.py through the `EPS_PIX` variable.
 
-### A. Calcolo UAP per un singolo modello
-Posizionarsi nella cartella principale del progetto: ```python run_save_uap.py <model_name>```
+### A. Generate UAP for a single model
+From the project root directory:: ```python run_save_uap.py <model_name>```
 
-### B. Calcolo UAP per tutti i modelli
-Posizionarsi nella cartella principale del progetto: ```python run_save_uap.py```
+### B. Generate UAPs for all models
+From the project root directory:: ```python run_save_uap.py```
 
-## 4. Caricamento e visualizzazione della UAP
-Visualizza:
-- la perturbazione universale ***δ***
-- un esempio di immagine originale vs perturbata
-- le immagini vengono salvate in *uap_img/*.
+## 4. Loading and visualizing UAPs
+The visualization includes:
+- the universal perturbation ***δ***
+- an example of original vs perturbed image
+- all images are saved in *uap_img/*.
 
-### A. Visualizzare una UAP specifica
-Posizionarsi nella cartella principale del progetto: ```python uap_load_view.py <nome_file>```
+### A. Visualize a specific UAP
+From the project root directory:: ```python uap_load_view.py <nome_file>```
 
-### B. Visualizzare tutte le UAP salvate
-Posizionarsi nella cartella principale del progetto: ```python uap_load_view.py```
+### B. Visualize all saved UAPs
+From the project root directory:: ```python uap_load_view.py```
 
-## 5. Valutazione adversarial (clean vs UAP)
-Vengono calcolate:
-- Accuracy clean
-- Accuracy adversarial
+## 5. Adversarial evaluation (clean vs UAP)
+The following metrics are computed:
+- Clean accuracy
+- Adversarial accuracy
 - Fooling rate
 
-### A. Tutti le possibilità Modello × UAP
-Posizionarsi nella cartella principale del progetto: ```python eval_uap.py```
+### A. Evaluate all Model × UAP combinations
+From the project root directory:: ```python eval_uap.py```
 
-### B. Valutazione di una coppia specifica
-Posizionarsi nella cartella principale del progetto: ```python eval_uap.py <model_name> <uap_file>```
+### B. Evaluate a specific Model–UAP pair
+From the project root directory:: ```python eval_uap.py <model_name> <uap_file>```
 
 --- 
 
-## Modifica del budget di perturbazione ***ε***
-Il valore di ε può essere modificato direttamente in config.py.
+## Perturbation budget ***ε***
+The value of ***ε*** can be modified directly in *config.py*.
 
-Valori utilizzati negli esperimenti:
+Values used in the experiments:
 - 4/255 ≈ 0.015686
 - 8/255 ≈ 0.031373
 - 16/255 ≈ 0.062745
 
-## Risultati – Clean vs Adversarial (UAP)
+## Results – Clean vs Adversarial (UAP)
 
 ### ε = 4/255 (0.015686)
 
-| Modello           | Accuracy Clean | ε (±ε)              | UAP Epoch | Model + UAP                          | Accuracy Adversarial | Fooling |
+| Model             | Clean Accuracy | ε (±ε)              | UAP Epoch | Model + UAP                          | Adversarial Accuracy | Fooling |
 |-------------------|----------------|---------------------|-----------|--------------------------------------|----------------------|---------|
 | My_ResNet-18      | 89.49%         | 4/255 (0.015686)    | 10        | my_model + uap_my                    | 64.04%               | 33.08%  |
 |                   |                |                     |           | my_model + uap_tv                    | 66.17%               | 31.35%  |
@@ -154,7 +151,7 @@ Valori utilizzati negli esperimenti:
 
 ### ε = 8/255 (0.031373)
 
-| Modello           | Accuracy Clean | ε (±ε)              | UAP Epoch | Model + UAP                          | Accuracy Adversarial | Fooling |
+| Model             | Clean Accuracy | ε (±ε)              | UAP Epoch | Model + UAP                          | Adversarial Accuracy | Fooling |
 |-------------------|----------------|---------------------|-----------|--------------------------------------|----------------------|---------|
 | My_ResNet-18      | 89.49%         | 8/255 (0.031373)    | 10        | my_model + uap_my                    | 19.65%               | 79.83%  |
 |                   |                |                     |           | my_model + uap_tv                    | 34.54%               | 64.60%  |
@@ -170,7 +167,7 @@ Valori utilizzati negli esperimenti:
 
 ### ε = 16/255 (0.062745)
 
-| Modello           | Accuracy Clean | ε (±ε)              | UAP Epoch | Model + UAP                          | Accuracy Adversarial | Fooling |
+| Model             | Clean Accuracy | ε (±ε)              | UAP Epoch | Model + UAP                          | Adversarial Accuracy | Fooling |
 |-------------------|----------------|---------------------|-----------|--------------------------------------|----------------------|---------|
 | My_ResNet-18      | 89.49%         | 16/255 (0.062745)   | 10        | my_model + uap_my                    | 10.16%               | 89.44%  |
 |                   |                |                     |           | my_model + uap_tv                    | 10.61%               | 89.01%  |
@@ -184,45 +181,45 @@ Valori utilizzati negli esperimenti:
 
 ---
 
-## Commento finale sui risultati
+## Final discussion of the results
 
-I risultati sperimentali mostrano in modo chiaro l’efficacia delle **Universal Adversarial Perturbations (UAP)** nel degradare le prestazioni dei modelli di classificazione, sia in **white-box** sia in **black-box**.
+The experimental results clearly demonstrate the effectiveness of **Universal Adversarial Perturbations (UAPs)** in degrading the performance of image classification models, both in **white-box** and **black-box** scenarios.
 
-### Impatto del budget di perturbazione (ε)
+### Impact of the perturbation budget (ε)
 
-All’aumentare del budget di perturbazione ***ε*** (da 4/255 a 16/255) si osserva un comportamento coerente su tutti i modelli:
-- l’**accuracy adversarial** diminuisce drasticamente;
-- il **fooling rate** cresce fino a valori prossimi o superiori all’85–90%.
+As the perturbation budget ***ε*** increases (from 4/255 to 16/255), a consistent behavior is observed across all models:
+- **adversarial accuracy** decreases sharply;
+- the **fooling rate** increases, reaching values close to or above **85–90%**.
 
-Per *ε = 16/255*, tutte le combinazioni modello–UAP portano l’accuracy adversarial intorno al **10–20%**, indicando che una perturbazione universale sufficientemente ampia è in grado di compromettere quasi completamente la capacità predittiva dei modelli.
+For *ε = 16/255*, all model–UAP combinations lead to adversarial accuracies in the range of **10–20%**, indicating that a sufficiently large universal perturbation is able to almost completely compromise the predictive capability of the models.
 
 ### White-box vs Black-box
 
-Come atteso, l’attacco **white-box** (UAP applicata allo stesso modello su cui è stata ottimizzata) risulta sempre il più efficace:
-- ad esempio, *my_resnet18 + uap_my* e *tv_resnet18 + uap_tv* mostrano i valori di accuracy adversarial più bassi e i fooling rate più elevati per ogni ***ε***.
+As expected, **white-box attacks** (i.e., UAPs applied to the same model on which they were optimized) are consistently the most effective:
+- for example, *my_resnet18 + uap_my* and *tv_resnet18 + uap_tv* exhibit the lowest adversarial accuracies and the highest fooling rates for every value of ***ε***.
 
-Tuttavia, i risultati evidenziano anche una **notevole trasferibilità (black-box)**:
-- le UAP ottimizzate su un modello risultano efficaci anche su architetture diverse;
-- in particolare, le UAP generate su **DenseNet_Light** mostrano una buona capacità di trasferimento verso le ResNet, soprattutto per *ε ≥ 8/255*.
+However, the results also highlight a **remarkable transferability (black-box behavior)**:
+- UAPs optimized on one model remain effective when applied to different architectures;
+- in particular, UAPs generated on **DenseNet_Light** show strong transferability toward ResNet-based models, especially for *ε ≥ 8/255*.
 
-Questo conferma che le perturbazioni universali catturano vulnerabilità condivise tra modelli addestrati sullo stesso dataset.
+This confirms that universal perturbations exploit vulnerabilities that are shared across models trained on the same dataset.
 
-### Confronto tra architetture
+### Architectural comparison
 
-Le differenze tra le architetture emergono soprattutto a basso ***ε***:
-- per *ε = 4/255*, le accuracy adversarial rimangono relativamente alte in alcuni casi black-box, indicando una maggiore robustezza a perturbazioni più piccole;
-- *DenseNet_Light*, pur avendo una clean accuracy leggermente inferiore, mostra una forte vulnerabilità in white-box, con fooling rate elevati già per *ε = 8/255*.
+Differences among architectures are more evident at lower values of ***ε***:
+- for *ε = 4/255*, adversarial accuracies remain relatively high in some black-box cases, suggesting increased robustness to small perturbations;
+- *DenseNet_Light*, despite having slightly lower clean accuracy, exhibits strong white-box vulnerability, with high fooling rates already at *ε = 8/255*.
 
-Nel complesso, nessuna architettura risulta realmente robusta alle UAP quando il budget di perturbazione cresce, a conferma della pericolosità di questo tipo di attacco.
+Overall, none of the considered architectures proves to be truly robust against UAPs as the perturbation budget increases, confirming the severity of this type of attack.
 
-### Conclusione
+### Conclusion
 
-Questi esperimenti dimostrano che:
-- le UAP rappresentano una minaccia concreta e generalizzabile;
-- la vulnerabilità non è limitata a una singola architettura;
-- la trasferibilità rende l’attacco particolarmente rilevante in scenari reali, dove il modello target non è noto.
+These experiments show that:
+- UAPs represent a concrete and highly generalizable threat;
+- model vulnerability is not limited to a single architecture;
+- transferability makes UAP-based attacks particularly relevant in real-world scenarios, where the target model is unknown.
 
-I risultati ottenuti sono coerenti con la letteratura sulle Universal Adversarial Perturbations e confermano la necessità di studiare strategie di difesa specifiche contro attacchi universali.
+The obtained results are consistent with the existing literature on **Universal Adversarial Perturbations** and further emphasize the need for dedicated defense strategies against universal attacks.
 
 ---
 

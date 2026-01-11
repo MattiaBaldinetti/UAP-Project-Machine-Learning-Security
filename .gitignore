@@ -20,3 +20,6 @@ Thumbs.db
 # PyTorch models / checkpoints / uap
 # *.pt
 # *.pth
+
+# README in Italiano
+README_ITA.txt

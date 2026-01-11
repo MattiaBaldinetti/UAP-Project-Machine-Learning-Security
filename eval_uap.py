@@ -195,7 +195,7 @@ def main():
         model, _, _ = load_and_freeze_model(m, device=device)
         wrapped_models[m] = wrap_with_normalizer(model, device)
 
-    print("\n========= TUTTI GLI INCROCI Clean vs ADV (model × uap) =========")
+    print("\n========= TUTTI I POSSIBILI Clean vs ADV (model × uap) =========")
 
     # 5) per ogni eps: stampa header + tutte le combinazioni
     for eps_uap in sorted(uaps_by_eps.keys()):
