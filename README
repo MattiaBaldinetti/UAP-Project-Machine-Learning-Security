@@ -77,17 +77,17 @@ UAP(dense, 8/255) → tv_resnet18 (black-box)
 
 
 ==> ε = 16/255 = 0.062745  <==
-- - UAP ottimizzata su my_resnet18
+- UAP ottimizzata su my_resnet18
 UAP(my, 16/255) → my_resnet18 (white-box)
 UAP(my, 16/255) → tv_resnet18 (black-box)
 UAP(my, 16/255) → densenet_light (black-box)
 
-- - UAP ottimizzata su tv_resnet18
+- UAP ottimizzata su tv_resnet18
 UAP(tv, 16/255) → tv_resnet18 (white-box)
 UAP(tv, 16/255) → my_resnet18 (black-box)
 UAP(tv, 16/255) → densenet_light (black-box)
 
-- - UAP ottimizzata su densenet_light
+- UAP ottimizzata su densenet_light
 UAP(dense, 16/255) → densenet_light (white-box)
 UAP(dense, 16/255) → my_resnet18 (black-box)
 UAP(dense, 16/255) → tv_resnet18 (black-box)
