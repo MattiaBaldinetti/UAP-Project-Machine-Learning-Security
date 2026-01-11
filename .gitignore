@@ -18,5 +18,5 @@ Thumbs.db
 *.gz
 
 # PyTorch models / checkpoints
-*.pt
-*.pth
+# *.pt
+# *.pth
