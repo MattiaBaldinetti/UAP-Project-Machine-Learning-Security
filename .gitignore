@@ -16,3 +16,7 @@ Thumbs.db
 
 # Compressed archives
 *.gz
+
+# PyTorch models / checkpoints
+*.pt
+*.pth
