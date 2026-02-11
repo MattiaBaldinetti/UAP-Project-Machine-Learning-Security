@@ -75,7 +75,7 @@ For each model, the best checkpoint is selected based on test accuracy.
 From the project root directory: ```python run_clean_experiment.py```
 
 ### B. Training a single model
-From the project root directory: ```python run_clean_experiment.py --model <nome_modello>```
+From the project root directory: ```python run_clean_experiment.py --model <model_name>```
 
 ## 2. Loading and freezing models
 Loads the best checkpoints and freezes the models (`eval mode` and `requires_grad=False`) for UAP generation.
@@ -84,7 +84,7 @@ Loads the best checkpoints and freezes the models (`eval mode` and `requires_gra
 From the project root directory: ```python load_models.py```
 
 ### B. Load a specific model
-From the project root directory: ```python load_models.py --model <nome_modello>```
+From the project root directory: ```python load_models.py --model <model_name>```
 
 ## 3. Universal Adversarial Perturbation (UAP) generation
 UAPs are computed in pixel-space and saved in the *uaps/* directory.
@@ -101,10 +101,10 @@ From the project root directory: ```python run_save_uap.py```
 The visualization includes:
 - the universal perturbation ***δ***
 - an example of original vs perturbed image
-- all images are saved in *uap_img/*.
+- all images are saved in *uap_img/*
 
 ### A. Visualize a specific UAP
-From the project root directory: ```python uap_load_view.py <nome_file>```
+From the project root directory: ```python uap_load_view.py <file_name>```
 
 ### B. Visualize all saved UAPs
 From the project root directory: ```python uap_load_view.py```
