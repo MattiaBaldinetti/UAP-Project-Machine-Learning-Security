@@ -72,19 +72,19 @@ Models are trained on CIFAR-10 under clean conditions.
 For each model, the best checkpoint is selected based on test accuracy.
 
 ### A. Training all models
-From the project root directory:: ```python run_clean_experiment.py```
+From the project root directory: ```python run_clean_experiment.py```
 
 ### B. Training a single model
-From the project root directory:: ```python run_clean_experiment.py --model <nome_modello>```
+From the project root directory: ```python run_clean_experiment.py --model <nome_modello>```
 
 ## 2. Loading and freezing models
 Loads the best checkpoints and freezes the models (`eval mode` and `requires_grad=False`) for UAP generation.
 
 ### A. Load all models 
-From the project root directory:: ```python load_models.py```
+From the project root directory: ```python load_models.py```
 
 ### B. Load a specific model
-From the project root directory:: ```python load_models.py --model <nome_modello>```
+From the project root directory: ```python load_models.py --model <nome_modello>```
 
 ## 3. Universal Adversarial Perturbation (UAP) generation
 UAPs are computed in pixel-space and saved in the *uaps/* directory.
@@ -92,10 +92,10 @@ UAPs are computed in pixel-space and saved in the *uaps/* directory.
 The perturbation budget ***ε*** is defined in config.py through the `EPS_PIX` variable.
 
 ### A. Generate UAP for a single model
-From the project root directory:: ```python run_save_uap.py <model_name>```
+From the project root directory: ```python run_save_uap.py <model_name>```
 
 ### B. Generate UAPs for all models
-From the project root directory:: ```python run_save_uap.py```
+From the project root directory: ```python run_save_uap.py```
 
 ## 4. Loading and visualizing UAPs
 The visualization includes:
@@ -104,10 +104,10 @@ The visualization includes:
 - all images are saved in *uap_img/*.
 
 ### A. Visualize a specific UAP
-From the project root directory:: ```python uap_load_view.py <nome_file>```
+From the project root directory: ```python uap_load_view.py <nome_file>```
 
 ### B. Visualize all saved UAPs
-From the project root directory:: ```python uap_load_view.py```
+From the project root directory: ```python uap_load_view.py```
 
 ## 5. Adversarial evaluation (clean vs UAP)
 The following metrics are computed:
@@ -116,10 +116,10 @@ The following metrics are computed:
 - Fooling rate
 
 ### A. Evaluate all Model × UAP combinations
-From the project root directory:: ```python eval_uap.py```
+From the project root directory: ```python eval_uap.py```
 
 ### B. Evaluate a specific Model–UAP pair
-From the project root directory:: ```python eval_uap.py <model_name> <uap_file>```
+From the project root directory: ```python eval_uap.py <model_name> <uap_file>```
 
 --- 
 
