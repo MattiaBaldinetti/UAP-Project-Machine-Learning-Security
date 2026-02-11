@@ -16,13 +16,10 @@ from config import (
     Y_TARGET,
 )
 
-# --- Modelli supportati ---
-# Chiave = quello che scrivi da CLI
-# Valore = quello che passa a load_and_freeze_model(...)
 MODEL_ALIASES = {
-    "my_resnet18": "my",          # oppure "my_resnet18"
-    "tv_resnet18": "tv",          # oppure "tv_resnet18"
-    "densenet_light": "densenet", # oppure "densenet_light"
+    "my_resnet18": "my",          
+    "tv_resnet18": "tv",          
+    "densenet_light": "densenet", 
 }
 
 
@@ -43,14 +40,14 @@ def save_uap_pth(
     losses=None,
 ) -> Path:
     """
-    Salva UAP in un .pth con metadati (pixel-space).
+    Salva UAP in un .pth con metadati (pixel-space)
     """
     out_dir.mkdir(parents=True, exist_ok=True)
     eps_str = _eps_to_str(eps_pix)
     uap_path = out_dir / f"uap_{model_name}_eps{eps_str}.pth"
 
     ckpt = {
-        "delta_pix": delta_pix.detach().cpu(),   # portabile
+        "delta_pix": delta_pix.detach().cpu(),   
         "space": "pixel",
         "eps_pix": float(eps_pix),
         "beta": float(beta),
@@ -78,7 +75,6 @@ def main():
         )
     )
 
-    # UN SOLO ARGOMENTO POSIZIONALE (opzionale)
     parser.add_argument(
         "model",
         nargs="?",                 # opzionale
@@ -91,13 +87,11 @@ def main():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print("[Setup] Device:", device)
 
-    # quali modelli processare
     if args.model == "all":
         selected_models = list(MODEL_ALIASES.keys())
     else:
         selected_models = [args.model]
 
-    # loader pixel-space (x in [0,1], NO Normalize)
     train_loader_pix, _ = get_cifar10_loaders_pixelspace(device=device)
 
     # output dir UAP
@@ -109,7 +103,6 @@ def main():
         print(f"[UAP Pixel-space] Generating UAP for {model_name}...")
         print("==============================")
 
-        # carica e congela solo quel modello
         model, _, _ = load_and_freeze_model(model_name, device=device)
 
         delta_pix, losses = gen_uap_pixelspace(
@@ -126,7 +119,7 @@ def main():
 
         path = save_uap_pth(
             delta_pix=delta_pix,
-            model_name=model_name,   # nome “standard” usato nel filename
+            model_name=model_name,  
             eps_pix=EPS_PIX,
             beta=BETA,
             step_decay=STEP_DECAY,

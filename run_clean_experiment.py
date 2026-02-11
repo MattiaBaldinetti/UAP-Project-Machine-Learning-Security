@@ -1,4 +1,3 @@
-# code/train.py
 from __future__ import annotations
 
 import argparse
@@ -16,10 +15,10 @@ from models.densenet import densenet_cifar_light
 def build_model(model_name: str, num_classes: int):
     """
     Ritorna una nuova istanza del modello richiesto.
-    Nota: ogni chiamata crea un modello con pesi iniziali fresh.
+    NB: ogni chiamata crea un modello con pesi iniziali fresh
     """
     if model_name == "my_resnet18":
-        return my_resnet18()  # il tuo non accetta num_classes
+        return my_resnet18() 
     if model_name == "tv_resnet18":
         return tv_resnet18(num_classes=num_classes)
     if model_name == "densenet_light":
@@ -41,7 +40,7 @@ def main():
     )
     args = parser.parse_args()
 
-    # Se non specifichi nulla, per praticità alleni tutto
+    # Se non viene specificato nulla, si traina tutto
     selected = args.model or "all"
     if selected == "all":
         models_to_train = ["my_resnet18", "tv_resnet18", "densenet_light"]
@@ -60,9 +59,8 @@ def main():
 
     results = {}
 
-    # training selettivo
     for name in models_to_train:
-        set_seed(SEED)  # equità: stesso seed per ogni run modello
+        set_seed(SEED) 
         model = build_model(name, NUM_CLASSES)
 
         model_trained, acc = train_and_eval_model(

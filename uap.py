@@ -43,12 +43,7 @@ def gen_uap_pixelspace(
     delta_init: Optional[torch.Tensor] = None,
     device: Optional[torch.device] = None,
 ) -> Tuple[torch.Tensor, List[float]]:
-    """
-    UAP in pixel-space:
-      x_pert_pix = clip(x_pix + δ, 0, 1)
-      x_pert_norm = normalize_batch(x_pert_pix)
-      forward sul modello (fisso), aggiorni SOLO δ (stile L∞ sign gradient)
-    """
+    
     if device is None:
         try:
             device = next(model.parameters()).device
@@ -57,7 +52,6 @@ def gen_uap_pixelspace(
 
     model.eval()
 
-    # inferisci shape
     x0, _ = next(iter(loader_pix))
     x0 = x0.to(device)
 

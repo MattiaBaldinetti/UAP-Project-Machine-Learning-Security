@@ -22,7 +22,6 @@ def get_transforms_normalized():
 
 
 def get_transforms_pixelspace():
-    # come nel tuo snippet: NO Normalize, output in [0,1]
     train_t = transforms.Compose([
         transforms.RandomCrop(32, padding=4),
         transforms.RandomHorizontalFlip(),
@@ -36,7 +35,7 @@ def get_transforms_pixelspace():
 
 def get_cifar10_loaders(batch_size: int = BATCH_SIZE, device: torch.device | None = None):
     """
-    Loader "standard" per training/eval: immagini NORMALIZZATE (come nel training).
+    Loader "standard" per training/eval: immagini NORMALIZZATE
     """
     ensure_dir(DATA_DIR)
     train_t, test_t = get_transforms_normalized()
@@ -56,7 +55,7 @@ def get_cifar10_loaders(batch_size: int = BATCH_SIZE, device: torch.device | Non
 
 def get_cifar10_loaders_pixelspace(batch_size: int = BATCH_SIZE, device: torch.device | None = None):
     """
-    Loader per UAP: immagini in pixel-space [0,1] (NO Normalize).
+    Loader per UAP: immagini in pixel-space [0,1] (NO Normalize)
     """
     ensure_dir(DATA_DIR)
     train_t, test_t = get_transforms_pixelspace()
@@ -77,10 +76,6 @@ def get_cifar10_loaders_pixelspace(batch_size: int = BATCH_SIZE, device: torch.d
 def normalize_batch(x_pix: torch.Tensor,
                     mean=CIFAR10_MEAN,
                     std=CIFAR10_STD) -> torch.Tensor:
-    """
-    x_pix: [B,3,32,32] in [0,1]
-    ritorna: (x - mean)/std
-    """
     mean_t = torch.tensor(mean, device=x_pix.device, dtype=x_pix.dtype).view(1, 3, 1, 1)
     std_t = torch.tensor(std, device=x_pix.device, dtype=x_pix.dtype).view(1, 3, 1, 1)
     return (x_pix - mean_t) / std_t

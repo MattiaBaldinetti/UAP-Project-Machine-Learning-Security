@@ -31,7 +31,7 @@ def load_checkpoint_into_model(
 
 def build_model(model_name: str, num_classes: int) -> nn.Module:
     """
-    Crea una nuova istanza del modello richiesto (pesi fresh).
+    Crea una nuova istanza del modello richiesto (pesi fresh)
     """
     if model_name == "my_resnet18":
         return my_resnet18()
@@ -46,7 +46,7 @@ def build_model(model_name: str, num_classes: int) -> nn.Module:
 def load_and_freeze_model(model_name: str, device: torch.device | None = None):
     """
     Carica <CHECKPOINT_DIR>/<model_name>_best.pth in un modello appena costruito
-    e lo congela (eval + requires_grad=False).
+    e lo congela (eval + requires_grad=False)
 
     Ritorna: (model, ckpt, device)
     """

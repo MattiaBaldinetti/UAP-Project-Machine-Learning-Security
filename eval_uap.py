@@ -34,17 +34,17 @@ def wrap_with_normalizer(model: nn.Module, device: torch.device) -> nn.Module:
 
 
 # -------------------------
-# (B) Applica δ in pixel-space + clamp
+# (B) δ in pixel-space + clamp
 # -------------------------
 def apply_uap_to_batch(x_pix: torch.Tensor, delta_pix: torch.Tensor, eps_pix: float) -> torch.Tensor:
     if delta_pix.dim() == 3:
-        delta_pix = delta_pix.unsqueeze(0)  # [1,3,32,32]
-    delta_pix = delta_pix.clamp(-eps_pix, eps_pix)      # safety
-    return (x_pix + delta_pix).clamp(0.0, 1.0)          # clip immagine valida
+        delta_pix = delta_pix.unsqueeze(0)  
+    delta_pix = delta_pix.clamp(-eps_pix, eps_pix)      
+    return (x_pix + delta_pix).clamp(0.0, 1.0)          
 
 
 # -------------------------
-# (C) Valutazione: clean acc, adv acc, fooling rate
+# (C) Valutazione
 # -------------------------
 @torch.no_grad()
 def evaluate_clean_and_uap(
@@ -118,7 +118,6 @@ def _fmt_pct(x: float) -> str:
 
 
 def _fmt_eps(eps: float) -> str:
-    # 16/255 => "0.062745" (coerente col nome file)
     return f"{eps:.6f}"
 
 
@@ -127,16 +126,14 @@ def _load_uap(path: Path):
     if "delta_pix" not in ckpt:
         raise KeyError(f"{path.name} non contiene la chiave 'delta_pix'")
     delta = ckpt["delta_pix"]
-    eps = float(ckpt.get("eps_pix"))  # recupera il valore di eps dal checkpoint
+    eps = float(ckpt.get("eps_pix")) 
     return delta, eps, ckpt
 
 def _uap_base_name(path: Path) -> str:
-    # rimuove estensione e suffisso _epsXpYYYYYY
-    name = path.stem                     # uap_densenet_light_eps0p031373
+    name = path.stem                     
     if "_eps" in name:
-        name = name.split("_eps")[0]     # uap_densenet_light
+        name = name.split("_eps")[0]     
     return name
-
 
 
 # -------------------------
@@ -172,7 +169,6 @@ def main():
     if len(args) != 0:
         raise SystemExit("Uso: python eval_uap.py [MODEL UAP_FILE]\n- senza argomenti: tutti gli incroci\n- con 2 argomenti: solo quel caso")
 
-    # 1) trova tutte le UAP
     uap_dir = _uaps_dir()
     if not uap_dir.exists():
         raise FileNotFoundError(f"Cartella UAP non trovata: {uap_dir}")
@@ -180,34 +176,28 @@ def main():
     if not uap_paths:
         raise FileNotFoundError(f"Nessun file .pth in: {uap_dir}")
 
-    # 2) raggruppa UAP per eps
     uaps_by_eps: dict[float, list[Path]] = defaultdict(list)
     for p in uap_paths:
         _, eps_uap, _ = _load_uap(p)
         uaps_by_eps[eps_uap].append(p)
 
-    # 3) modelli disponibili (quelli del tuo progetto)
     model_names = ["my_resnet18", "tv_resnet18", "densenet_light"]
 
-    # 4) carica modelli una volta sola (più veloce)
     wrapped_models: dict[str, nn.Module] = {}
     for m in model_names:
         model, _, _ = load_and_freeze_model(m, device=device)
         wrapped_models[m] = wrap_with_normalizer(model, device)
 
-    print("\n========= TUTTI I POSSIBILI Clean vs ADV (model × uap) =========")
+    print("\n========= TUTTI I POSSIBILI Clean vs ADV (model x uap) =========")
 
-    # 5) per ogni eps: stampa header + tutte le combinazioni
     for eps_uap in sorted(uaps_by_eps.keys()):
         print(f"\nValore di eps = {_fmt_eps(eps_uap)}")
 
-        # pre-load delta per questo eps (eviti reload inutili)
         deltas = []
         for p in uaps_by_eps[eps_uap]:
             delta, _, _ = _load_uap(p)
             deltas.append((p, delta))
 
-        # stampa tutte le righe: model × uap
         for model_name in model_names:
             model_wrapped = wrapped_models[model_name]
             for p, delta in deltas:

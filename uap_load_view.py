@@ -52,7 +52,7 @@ def show_uap(delta_pix: torch.Tensor, eps_pix: float, model_name: str):
     out_dir = _uap_img_dir()
     eps_str = _eps_to_str(eps_pix)
 
-    d = delta_pix.detach().squeeze(0).cpu()  # [3,32,32]
+    d = delta_pix.detach().squeeze(0).cpu() 
 
     # δ mapped [-eps,+eps] -> [0,1]
     d_vis = (d / eps_pix).clamp(-1, 1)
@@ -110,7 +110,7 @@ def show_example_perturbation(
     _, test_loader_pix = get_cifar10_loaders_pixelspace(device=device)
     xb_pix, _ = next(iter(test_loader_pix))
 
-    x = xb_pix[0:1].to(device, non_blocking=True)  # [1,3,32,32]
+    x = xb_pix[0:1].to(device, non_blocking=True)  
     x_pert = torch.clamp(x + delta_pix.to(device), 0.0, 1.0)
 
     x_img = x.detach().cpu().squeeze(0).permute(1, 2, 0).numpy()

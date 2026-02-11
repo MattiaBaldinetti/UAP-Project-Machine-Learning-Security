@@ -15,7 +15,7 @@ LR_GAMMA = 0.1
 CIFAR10_MEAN = (0.4914, 0.4822, 0.4465)
 CIFAR10_STD  = (0.2470, 0.2435, 0.2616)
 
-# Root = cartella "code/" (dove stanno questi file .py)
+# Root = cartella "code/"
 PROJECT_DIR = Path(__file__).resolve().parent
 
 DATA_DIR = PROJECT_DIR / "data"

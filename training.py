@@ -26,6 +26,7 @@ def evaluate_accuracy(model: nn.Module, dataloader, device: torch.device) -> flo
 
     return correct / total
 
+
 def train_one_epoch(model: nn.Module, dataloader, optimizer, criterion, device: torch.device) -> float:
     model.train()
     running_loss, total = 0.0, 0
@@ -45,6 +46,7 @@ def train_one_epoch(model: nn.Module, dataloader, optimizer, criterion, device: 
 
     return running_loss / total
 
+
 def make_optim_and_sched(model: nn.Module):
     optimizer = torch.optim.SGD(
         model.parameters(),
@@ -58,6 +60,7 @@ def make_optim_and_sched(model: nn.Module):
         gamma=LR_GAMMA,
     )
     return optimizer, scheduler
+
 
 def train_and_eval_model(
     model: nn.Module,
@@ -98,7 +101,6 @@ def train_and_eval_model(
             best_state = copy.deepcopy(model.state_dict())
 
     if best_state is None:
-        # Caso limite: non è mai migliorato (non dovrebbe succedere, ma meglio essere robusti)
         best_state = copy.deepcopy(model.state_dict())
 
     model.load_state_dict(best_state)

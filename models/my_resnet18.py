@@ -98,22 +98,6 @@ class ResNet(nn.Module):
 Here you have different flavours of the DenseNet architecture of different sizes suitable for different task/datasets
 '''
 
-""" Il numero indica il numero totale di layer “pesati” (learnable layers)
-18:
-4 “stages” [2,2,2,2] (layer1, layer2, layer3, layer4) ciascuno con 2 BasicBlock --> 2+2+2+2=8 blocchi
-Ogni __BasicBlock__ ha 2 conv layer --> 8 blocchi x 2 conv = 16 conv layer
-Infine si aggiungono: 1 conv1 iniziale + 1 fc finale = 16 + 2 = 18 layer totali
-
-34:
-4 “stages” [3,4,6,3] (layer1, layer2, layer3, layer4) con 3,4,6,3 BasicBlock --> 3+4+6+3=16 blocchi
-Ogni __BasicBlock__ ha 2 conv layer --> 16 blocchi x 2 conv = 32 conv layer
-Infine si aggiungono: 1 conv1 iniziale + 1 fc finale = 32 + 2 = 34 layer totali
-
-es 101:
-4 “stages” con 3,4,23,3 Bottleneck --> 3+4+23+3=33 blocchi
-Ogni __Bottleneck__ ha 3 conv layer --> 33 blocchi x 3 conv = 99 conv layer
-Infine si aggiungono: 1 conv1 iniziale + 1 fc finale = 99 + 2 = 101 layer totali
- """
 def ResNet18():
     return ResNet(BasicBlock, [2,2,2,2])
 
