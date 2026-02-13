@@ -5,12 +5,6 @@ import torch.nn as nn
 
 from data import normalize_batch
 
-
-def project_delta_linf_pix_(delta: torch.Tensor, eps_pix: float):
-    with torch.no_grad():
-        delta.clamp_(-eps_pix, eps_pix)
-
-
 def apply_uap_pixelspace(x_pix: torch.Tensor,
                          delta_pix: torch.Tensor,
                          pixel_clip: bool = True) -> torch.Tensor:
