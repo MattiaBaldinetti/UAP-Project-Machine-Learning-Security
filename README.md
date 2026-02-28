@@ -27,14 +27,16 @@ pip install torch torchvision torchaudio numpy matplotlib
 ```text
 project_root/
 │
+├── training.py                  # Train three different architectures under clean conditions
 ├── run_clean_experiment.py      # Clean training + best checkpoint selection
 ├── load_models.py               # Load and freeze trained models
+├── uap.py                       # UAP generation utilities
 ├── run_save_uap.py              # UAP generation and saving (pixel-space)
 ├── uap_load_view.py             # Load and visualize saved UAPs
 ├── eval_uap.py                  # Clean vs adversarial evaluation + fooling rate
 ├── config.py                    # Global configuration (hyperparameters, paths, eps)
 ├── data.py                      # CIFAR-10 DataLoader (clean and pixel-space)
-├── uap.py                       # UAP generation utilities
+├── utils.py                     # Utility scripts to improve reusability and modularity
 │
 ├── models/
 │   ├── my_resnet18.py           # Custom ResNet-18 implementation
