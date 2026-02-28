@@ -5,15 +5,6 @@ import torch.nn as nn
 
 from data import normalize_batch
 
-def apply_uap_pixelspace(x_pix: torch.Tensor,
-                         delta_pix: torch.Tensor,
-                         pixel_clip: bool = True) -> torch.Tensor:
-    x_pert = x_pix + delta_pix
-    if pixel_clip:
-        x_pert = torch.clamp(x_pert, 0.0, 1.0)
-    return x_pert
-
-
 def make_clamped_loss(beta: float, device: torch.device):
     loss_fn = nn.CrossEntropyLoss(reduction="none")
     beta_t = torch.tensor(beta, device=device, dtype=torch.float32)
